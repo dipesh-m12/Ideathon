@@ -1,0 +1,8 @@
+numpy        
+face-recognition
+Pillow
+mediapipe
+opencv-python
+cmake
+PIL
+dlib
