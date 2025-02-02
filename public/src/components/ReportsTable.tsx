@@ -28,17 +28,34 @@ export default function ReportsTable() {
       <TableHeader>
         <TableRow>
           <TableHead>Domain</TableHead>
-          <TableHead>Status</TableHead>
+          <TableHead>Description</TableHead>
+          <TableHead>Registrar</TableHead>
           <TableHead>Report Date</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {reports.map((report) => (
-          <TableRow key={report._id}>
+          <TableRow
+            key={report._id}
+            className="cursor-pointer"
+            onClick={() => {
+              const info = report.whoisInfo;
+              alert(
+                `Domain Information:\n\n` +
+                `Domain: ${info.domain_name}\n` +
+                `Registrar: ${info.registrar}\n` +
+                `Created: ${new Date(info.creation_date).toLocaleDateString()}\n` +
+                `Expires: ${new Date(info.expiration_date).toLocaleDateString()}\n` +
+                `Name Servers: ${info.name_servers?.join(', ')}\n` +
+                `WHOIS Server: ${info.whois_server}\n`
+              );
+            }}
+          >
             <TableCell>{report.url}</TableCell>
-            <TableCell>Pending</TableCell>
+            <TableCell>{report.description}</TableCell>
+            <TableCell>{report.whoisInfo.registrar || "undetected"}</TableCell>
             <TableCell>{new Date(report.timestamp).toLocaleDateString()}</TableCell>
-          </TableRow> 
+          </TableRow>
         ))}
       </TableBody>
     </Table>

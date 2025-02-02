@@ -10,10 +10,12 @@ import { useToast } from "@/hooks/use-toast"
 export default function PhishingReportForm() {
   const [domain, setDomain] = useState("")
   const [description, setDescription] = useState("")
+  const [loading, setLoading] = useState(false)
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     try {
       const response = await fetch('http://localhost:3000/report', {
         method: 'POST',
@@ -36,6 +38,7 @@ export default function PhishingReportForm() {
       })
       setDomain("")
       setDescription("")
+      setLoading(false)
     } catch (error) {
       toast({
         title: "Error",
@@ -67,7 +70,12 @@ export default function PhishingReportForm() {
           required
         />
       </div>
-      <Button type="submit">Submit Report</Button>
+      <Button type="submit" disabled={loading}>Submit Report</Button>
+      {loading && (
+        <div className="flex justify-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+        </div>
+      )}
     </form>
   )
 }
