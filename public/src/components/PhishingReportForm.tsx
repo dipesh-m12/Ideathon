@@ -12,16 +12,37 @@ export default function PhishingReportForm() {
   const [description, setDescription] = useState("")
   const { toast } = useToast()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send the data to your backend
-    console.log("Submitted:", { domain, description })
-    toast({
-      title: "Report Submitted",
-      description: `Domain: ${domain} has been reported.`,
-    })
-    setDomain("")
-    setDescription("")
+    try {
+      const response = await fetch('http://localhost:3000/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: domain,
+          description: description
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit report')
+      }
+
+      toast({
+        title: "Report Submitted",
+        description: `Domain: ${domain} has been reported.`,
+      })
+      setDomain("")
+      setDescription("")
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit report",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
